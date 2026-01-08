@@ -16,6 +16,9 @@ export default function NotesForm() {
 
         console.log(response.data)
 
+
+        
+
         navigate('/notes')
 
     }
