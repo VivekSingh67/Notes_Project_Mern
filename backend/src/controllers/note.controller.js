@@ -27,7 +27,7 @@ const createNote = async (req, res) => {
 const getNotesData = async (req, res) => {
     try {
         const user = req.user
-        const notes = await noteModel.find({user: user._id})
+        const notes = await noteModel.find({ user: user._id })
         res.status(200).json({
             message: "Data Get Successfully",
             notes: notes
@@ -40,4 +40,22 @@ const getNotesData = async (req, res) => {
     }
 }
 
-module.exports = { createNote, getNotesData }
+
+const updateNotesData = async (req, res) => {
+    try {
+        const user  = req.user
+        const notes = await noteModel.findOneAndUpdate({ _id: req.params.id }, { title: req.body.title, description: req.body.description })
+        const notesData = await noteModel.findOne({_id: req.params.id})
+         res.status(200).json({
+            message: "Notes Updated Successfully",
+            notesData
+        })
+
+    } catch (error) {
+        return res.status(401).json({
+            message: error.message
+        })
+    }
+}
+
+module.exports = { createNote, getNotesData, updateNotesData }

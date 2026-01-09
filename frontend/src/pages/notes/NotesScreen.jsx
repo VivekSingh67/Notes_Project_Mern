@@ -1,6 +1,19 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 export default function NotesApp() {
+  const [notesData, setNotesData] = useState([])
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const res = await axios.get('http://localhost:3000/api/notes/notes-data', {
+        withCredentials: true
+      })
+      setNotesData(res.data.notes)
+    }
+
+    fetchNotes()
+  }, [])
   return (
     <div className="min-h-screen bg-gray-100 p-8 md:p-12">
       <div className="max-w-7xl mx-auto">
@@ -10,46 +23,44 @@ export default function NotesApp() {
             + Add Note
           </Link>
         </div>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {/* Yellow Note Card */}
-          <div className="bg-yellow-300 rounded-3xl p-8 min-h-[280px] flex flex-col justify-between shadow-lg hover:transform hover:-translate-y-2 transition-transform relative">
-            <div className="text-xl font-semibold leading-snug text-gray-800">
-              The beginning of screenless design: UI jobs to be taken over by Solution Architect
-            </div>
-            <div className="flex justify-between items-center mt-6">
-              <div className="text-gray-700 text-sm">May 21, 2020</div>
-              <div className="flex gap-2">
-                <button className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white text-lg hover:bg-gray-800 transition-colors">
-                  <i class="ri-pencil-fill"></i>
-                </button>
-                <button className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white text-lg font-bold hover:bg-red-600 transition-colors">
-                  <i class="ri-delete-bin-fill"></i>
-                </button>
-              </div>
-            </div>
-          </div>
+          {notesData.map((items, index) => {
+            return (
+              <div
+                key={index}
+                className="bg-yellow-300 rounded-3xl p-8 min-h-[280px] flex flex-col justify-between shadow-lg hover:transform hover:-translate-y-2 transition-transform relative"
+              >
+                {/* Title */}
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  {items.title}
+                </h2>
 
-          {/* Orange Note Card with Star */}
-          <div className="bg-orange-300 rounded-3xl p-8 min-h-[280px] flex flex-col justify-between shadow-lg hover:transform hover:-translate-y-2 transition-transform relative">
-            <button className="absolute top-4 right-4 w-10 h-10 bg-black rounded-full flex items-center justify-center text-yellow-400 text-lg">
-              <i class="ri-star-s-line"></i>
-            </button>
-            <div className="text-xl font-semibold leading-snug text-gray-800 pr-12">
-              13 Things You Should Give Up If You Want To Be a Successful UX Designer
-            </div>
-            <div className="flex justify-between items-center mt-6">
-              <div className="text-gray-700 text-sm">May 25, 2020</div>
-              <div className="flex gap-2">
-                <button className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white text-lg hover:bg-gray-800 transition-colors">
-                  <i class="ri-pencil-fill"></i>
-                </button>
-                <button className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white text-lg font-bold hover:bg-red-600 transition-colors">
-                  <i class="ri-delete-bin-fill"></i>
-                </button>
+                {/* Description */}
+                <p className="text-base text-gray-800 flex-1">
+                  {items.description}
+                </p>
+
+                <div className="flex justify-between items-center mt-6">
+                  <div className="text-gray-700 text-sm">
+                    {new Date(items.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Link to={`/notesformedit/${items._id}`} className="w-10 h-10 bg-black rounded-full flex items-center justify-center text-white text-lg hover:bg-gray-800 transition-colors">
+                      <i className="ri-pencil-fill"></i>
+                    </Link>
+                    <Link to={`/notesformedit/${items._id}`} className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center text-white text-lg hover:bg-red-600 transition-colors">
+                      <i className="ri-delete-bin-fill"></i>
+                    </Link>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+            )
+          })}
+
+
         </div>
       </div>
     </div>
