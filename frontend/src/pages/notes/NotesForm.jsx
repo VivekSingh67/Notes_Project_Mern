@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
+
 
 export default function NotesForm() {
     const navigate = useNavigate()
@@ -9,14 +11,19 @@ export default function NotesForm() {
         e.preventDefault();
         const title = e.target.title.value;
         const description = e.target.description.value;
-        const response = axios.post("http://localhost:3000/api/notes/create-note", {
-            title,
-            description
-        }, { withCredentials: true })
-        
+        const color = e.target.color.value
+        try {
+            axios.post("http://localhost:3000/api/notes/create-note", {
+                title,
+                description,
+                color
+            }, { withCredentials: true })
+            toast.success("Notes Create successfully")
+            navigate('/notes')
+        } catch (error) {
+            toast.error(error.response?.data?.message)
 
-        navigate('/notes')
-
+        }
     }
 
     return (
@@ -55,6 +62,17 @@ export default function NotesForm() {
                                     name='description'
                                     placeholder="Enter note description..."
                                     rows="8"
+                                    className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-black transition-colors resize-none"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="description" className="block text-lg font-semibold text-gray-800 mb-3">
+                                    Color
+                                </label>
+                                <input
+                                    name='color'
+                                    placeholder="#576868"
                                     className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-black transition-colors resize-none"
                                     required
                                 />

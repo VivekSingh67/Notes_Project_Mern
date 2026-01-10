@@ -5,7 +5,8 @@ import LoginPage from './pages/auth/LoginPage'
 import NotesForm from './pages/notes/NotesForm';
 import NotesScreen from './pages/notes/NotesScreen';
 import NotesFormEdit from './pages/notes/NotesFormEdit';
-
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 const App = () => {
   return (
     <BrowserRouter>
@@ -16,6 +17,17 @@ const App = () => {
         <Route path="/notesform" element={<NotesForm />} />
         <Route path="/notesformedit/:id" element={<NotesFormEdit />} />
       </Routes>
+
+      {/* 🔥 Toast container (only once) */}
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="dark"
+      />
     </BrowserRouter>
   )
 }

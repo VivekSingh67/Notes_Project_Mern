@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify'
 
 export default function NotesFormEdit() {
     const { id } = useParams()
@@ -30,12 +31,17 @@ export default function NotesFormEdit() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await axios.post(`http://localhost:3000/api/notes/update-notes-data/${id}`, {
-            title,
-            description
-        }, { withCredentials: true })
+        try {
+            await axios.post(`http://localhost:3000/api/notes/update-notes-data/${id}`, {
+                title,
+                description
+            }, { withCredentials: true })
 
-        navigate('/notes')
+            toast.success("Update successful")
+            navigate('/notes')
+        } catch (error) {
+            toast.error(error.response?.data?.message)
+        }
 
     }
 
@@ -43,7 +49,7 @@ export default function NotesFormEdit() {
         <div className="min-h-screen bg-gray-100 p-8 md:p-12">
             <div className="max-w-4xl mx-auto">
                 <div className="mb-8">
-                    <button
+                    <button onClick={() => window.history.back()}
                         className="text-gray-600 hover:text-gray-900 flex items-center gap-2 text-lg mb-6"
                     >
                         <i className="ri-arrow-left-line"></i> Back

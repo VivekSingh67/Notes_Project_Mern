@@ -1,24 +1,30 @@
 import React from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const RegisterPage = () => {
     const navigate = useNavigate()
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const fullname = e.target.name.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        const response = axios.post("http://localhost:3000/api/auth/register", {
-            fullname,
-            email,
-            password
-        }, { withCredentials: true })
+        try {
+            await axios.post("http://localhost:3000/api/auth/register", {
+                fullname,
+                email,
+                password
+            }, { withCredentials: true })
+            toast.success("Register successful")
 
-        navigate('/notes')
+            navigate('/notes')
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Already Exixts")
+        }
     }
     return (
         <div className="min-h-screen bg-zinc-600 flex items-center justify-center p-4">
@@ -38,6 +44,7 @@ const RegisterPage = () => {
                                     name='name'
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none text-white"
                                     placeholder="Enter your name"
+                                    required
                                 />
                             </div>
 
@@ -50,6 +57,7 @@ const RegisterPage = () => {
                                     name='email'
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none text-white"
                                     placeholder="Enter your email"
+                                    required
                                 />
                             </div>
 
@@ -62,6 +70,7 @@ const RegisterPage = () => {
                                     name='password'
                                     className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none text-white"
                                     placeholder="Enter your password"
+                                    required
                                 />
                             </div>
 

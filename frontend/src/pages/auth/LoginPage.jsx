@@ -1,20 +1,27 @@
 import React from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
     const navigate = useNavigate()
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        const response = axios.post("http://localhost:3000/api/auth/login", {
-            email,
-            password
-        }, { withCredentials: true })
+        try {
+          await axios.post("http://localhost:3000/api/auth/login", {
+                email,
+                password
+            }, { withCredentials: true })
+            toast.success("Login successful")
+            navigate('/notes')
 
-        navigate('/notes')
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Invalid credentials")
+        }
+
     }
     return (
         <div className="min-h-screen bg-[#222831] flex items-center justify-center p-4">
