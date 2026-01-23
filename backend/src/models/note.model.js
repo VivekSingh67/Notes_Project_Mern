@@ -12,6 +12,9 @@ const noteModel = mongoose.Schema({
     description: {
         type: String,
         required: true
+    },
+    color:{
+        type: String
     }
 },{
     timestamps: true
